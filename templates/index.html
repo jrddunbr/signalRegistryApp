@@ -6,8 +6,9 @@ table {
     border-collapse: collapse;
 }
 
-table, tr, td {
+table, tr, td, th {
     border: 1px solid black;
+    padding: 6px;
 }
     </style>
 </head>
@@ -22,7 +23,7 @@ table, tr, td {
             Signal Name
         </th>
     </tr>
-    {% for user,list in users.iteritems() %}
+    {% for user,list in users.items() %}
     <tr>
         <td>{{ user|e }}</td>
         {% for signal in list %}

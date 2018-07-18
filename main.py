@@ -14,15 +14,13 @@ IP_WHITELIST = ["127.0.0.1", "128.153.145.150", "128.153.145.151"]
 PREFIX = "/signals"
 
 def save():
-    while 1:
-        try:
-            f = open(DATABASE_FILE, "w")
-            data = json.dumps(db)
-            f.write(data)
-            f.close()
-        except:
-            print("[Error] Unable to write to database file {}".format(DATABASE_FILE))
-        time.sleep(15)
+    try:
+        f = open(DATABASE_FILE, "w")
+        data = json.dumps(db)
+        f.write(data)
+        f.close()
+    except:
+        print("[Error] Unable to write to database file {}".format(DATABASE_FILE))
 
 if os.path.isfile(DATABASE_FILE):
     try:
@@ -33,8 +31,6 @@ if os.path.isfile(DATABASE_FILE):
         print("Database Loaded")
     except:
         print("[Error] Unable to read from database file {}".format(DATABASE_FILE))
-st = threading.Thread(target=save)
-st.start()
 
 @app.route("{}/".format(PREFIX))
 def indexAction():
@@ -82,11 +78,13 @@ def add(username, value):
         db[username] = []
     if value not in db[username]:
         db[username].append(value)
+        save()
 
 def remove(username, value):
     if username in db:
         if value in db[username]:
             db[username].remove(value)
+            save()
 
 def get(username):
     return db[username]
