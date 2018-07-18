@@ -51,7 +51,7 @@ def getAction(username):
         resp = json.dumps(db[username])
         return Response(response=resp, mimetype="application/json")
     else:
-        return ""
+        return "{}"
 
 @app.route("{}/add/<username>/<value>".format(PREFIX))
 def addAction(username, value):
