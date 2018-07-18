@@ -10,6 +10,30 @@ app = Flask(__name__)
 db = {}
 
 DATABASE_FILE = "signals.db"
+IP_WHITELIST = ["127.0.0.1"]
+
+def save():
+    while 1:
+        try:
+            f = open(DATABASE_FILE, "w")
+            data = json.dumps(db)
+            f.write(data)
+            f.close()
+        except:
+            print("[Error] Unable to write to database file {}".format(DATABASE_FILE))
+        time.sleep(15)
+
+if os.path.isfile(DATABASE_FILE):
+    try:
+        f = open(DATABASE_FILE)
+        data = f.readlines()[0]
+        f.close()
+        db = json.loads(data)
+        print("Database Loaded")
+    except:
+        print("[Error] Unable to read from database file {}".format(DATABASE_FILE))
+st = threading.Thread(target=save)
+st.start()
 
 @app.route("/")
 def indexAction():
@@ -30,13 +54,27 @@ def getAction(username):
 
 @app.route("/add/<username>/<value>")
 def addAction(username, value):
-    add(username, value)
-    return getAction(username)
+    if len(IP_WHITELIST) > 0:
+        if request.remote_addr in IP_WHITELIST:
+            add(username, value)
+            return getAction(username)
+        else:
+            return getAction(username)
+    else:
+        add(username, value)
+        return getAction(username)
 
 @app.route("/del/<username>/<value>")
 def delAction(username, value):
-    remove(username, value)
-    return getAction(username)
+    if len(IP_WHITELIST) > 0:
+        if request.remote_addr in IP_WHITELIST:
+            remove(username, value)
+            return getAction(username)
+        else:
+            return getAction(username)
+    else:
+        remove(username, value)
+        return getAction(username)
 
 def add(username, value):
     if username not in db:
@@ -52,17 +90,6 @@ def remove(username, value):
 def get(username):
     return db[username]
 
-def save():
-    while 1:
-        try:
-            f = open(DATABASE_FILE, "w")
-            data = json.dumps(db)
-            f.write(data)
-            f.close()
-        except:
-            print("[Error] Unable to write to database file {}".format(DATABASE_FILE))
-        time.sleep(15)
-
 def clean(inputStr):
     return "".join(
         [c for c in inputStr if c in string.ascii_letters or c in string.whitespace or c in "\\/.,?!|~+=_-[]@#$%^*()"])
@@ -73,14 +100,4 @@ def generateSecureKey(size):
 app.secret_key = generateSecureKey(64)
 
 if __name__ == "__main__":
-    if os.path.isfile(DATABASE_FILE):
-        try:
-            f = open(DATABASE_FILE)
-            data = f.readlines()[0]
-            f.close()
-            db = json.loads(data)
-        except:
-            print("[Error] Unable to read from database file {}".format(DATABASE_FILE))
-    st = threading.Thread(target=save)
-    st.start()
-    app.run(debug=True)
+    app.run()
