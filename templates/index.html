@@ -1,0 +1,35 @@
+<html>
+<head>
+    <title>Signal Registry</title>
+    <style>
+table {
+    border-collapse: collapse;
+}
+
+table, tr, td {
+    border: 1px solid black;
+}
+    </style>
+</head>
+<body>
+<h1>The Signal Registry</h1>
+<table>
+    <th>
+        <td>
+            Player Username
+        </td>
+        <td>
+            Signal Name
+        </td>
+    </th>
+    {% for user in users %}
+    <tr>
+        <td>{{ user.name }}</td>
+        {% for signal in user.signals %}
+        <td>{{ user.signal }}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+</body>
+</html>
