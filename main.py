@@ -10,7 +10,7 @@ app = Flask(__name__)
 db = {}
 
 DATABASE_FILE = "signals.db"
-IP_WHITELIST = ["127.0.0.1"]
+IP_WHITELIST = ["127.0.0.1", "128.153.145.150", "128.153.145.151"]
 PREFIX = "/signals"
 
 def save():

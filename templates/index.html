@@ -14,19 +14,19 @@ table, tr, td {
 <body>
 <h1>The Signal Registry</h1>
 <table>
-    <th>
-        <td>
+    <tr>
+        <th>
             Player Username
-        </td>
-        <td>
+        </th>
+        <th>
             Signal Name
-        </td>
-    </th>
+        </th>
+    </tr>
     {% for user in users %}
     <tr>
         <td>{{ user.name }}</td>
         {% for signal in user.signals %}
-        <td>{{ user.signal }}</td>
+        <td>{{ signal }}</td>
         {% endfor %}
     </tr>
     {% endfor %}
