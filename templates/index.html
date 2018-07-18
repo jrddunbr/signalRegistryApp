@@ -22,11 +22,11 @@ table, tr, td {
             Signal Name
         </th>
     </tr>
-    {% for user in users %}
+    {% for user,list in users.iteritems() %}
     <tr>
-        <td>{{ user.name }}</td>
-        {% for signal in user.signals %}
-        <td>{{ signal }}</td>
+        <td>{{ user|e }}</td>
+        {% for signal in list %}
+        <td>{{ signal|e }}</td>
         {% endfor %}
     </tr>
     {% endfor %}
