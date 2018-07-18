@@ -11,6 +11,7 @@ db = {}
 
 DATABASE_FILE = "signals.db"
 IP_WHITELIST = ["127.0.0.1"]
+PREFIX = "/signals"
 
 def save():
     while 1:
@@ -35,16 +36,16 @@ if os.path.isfile(DATABASE_FILE):
 st = threading.Thread(target=save)
 st.start()
 
-@app.route("/")
+@app.route("{}/".format(PREFIX))
 def indexAction():
     return render_template("index.html", users=db)
 
-@app.route("/getall")
+@app.route("{}/getall".format(PREFIX))
 def getAllAction():
     resp = json.dumps(db)
     return Response(response=resp, mimetype="application/json")
 
-@app.route("/get/<username>")
+@app.route("{}/get/<username>".format(PREFIX))
 def getAction(username):
     if username in db:
         resp = json.dumps(db[username])
@@ -52,7 +53,7 @@ def getAction(username):
     else:
         return ""
 
-@app.route("/add/<username>/<value>")
+@app.route("{}/add/<username>/<value>".format(PREFIX))
 def addAction(username, value):
     if len(IP_WHITELIST) > 0:
         if request.remote_addr in IP_WHITELIST:
@@ -64,7 +65,7 @@ def addAction(username, value):
         add(username, value)
         return getAction(username)
 
-@app.route("/del/<username>/<value>")
+@app.route("{}/del/<username>/<value>".format(PREFIX))
 def delAction(username, value):
     if len(IP_WHITELIST) > 0:
         if request.remote_addr in IP_WHITELIST:
